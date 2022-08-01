@@ -74,9 +74,10 @@
     "jet-logger": "^1.1.5",
     "jsonfile": "^6.1.0",
     "jsonwebtoken": "^8.5.1",
+    "lowdb": "^3.0.0",
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
-    "nanoid": "^4.0.0",
+    "nanoid": "^3.3.4",
     "randomstring": "^1.2.2"
   },
   "devDependencies": {

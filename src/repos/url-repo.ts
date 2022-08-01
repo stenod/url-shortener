@@ -1,5 +1,5 @@
-import { IUrl } from "@models/url-model";
-import  IUrlType  from "@models/url-model";
+import {IUrl} from "@models/url-model";
+import IUrlType from "@models/url-model";
 import orm from "@repos/mock-orm";
 import {getRandomInt, idToShortURL} from "@shared/functions";
 import {isNumberObject} from "util/types";
@@ -13,10 +13,9 @@ import {isNumberObject} from "util/types";
  */
 async function getOne(shortUrl: string): Promise<IUrl | null> {
     const db = await orm.openDb();
-
-    for (const url of db.urls) {
-        if (url.shortUrl === shortUrl) {
-            return url;
+    for (let i = 0; i < db.urls.length; i++) {
+        if (db.urls[i].shortUrl === shortUrl || db.urls[i].alias === shortUrl) {
+            return db.urls[i];
         }
     }
     return null;
@@ -33,10 +32,11 @@ async function getOne(shortUrl: string): Promise<IUrl | null> {
  * @param clicks
  * @returns
  */
-async function add(id: number, longUrl:string, shortUrl:string, alias: string, clicks: number): Promise<IUrl> {
+async function add(id: number, longUrl: string, shortUrl: string, alias: string, clicks: number): Promise<IUrl> {
     const db = await orm.openDb();
     const url = IUrlType.new(id, longUrl, shortUrl, alias, clicks)
-    db.users.push(url);
+    db.urls.push(url);
+    await orm.saveDb(db)
     return url;
 }
 

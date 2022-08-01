@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express';
 import urlService from "@services/url-service";
 import {ParamMissingError, UrlNotValidError} from "@shared/errors";
 import {getRandomInt, stringIsAValidUrl} from "@shared/functions";
-import {nanoid} from "nanoid";
+import nanoid from "nanoid";
 
 
 // Constants
@@ -17,26 +17,28 @@ export const p = {
     add: '/add',
 } as const;
 
+type RedirectReqQuery = { url ?: string}
 
 router.get(p.get, async (req: Request, res: Response) => {
-    const { shortUrl } = req.params;
+    const params: RedirectReqQuery = req.query;
+    const shortUrl = params.url;
     // Check param
     if (!shortUrl) {
         throw new ParamMissingError();
     }
     const url = await urlService.getOne(shortUrl);
+    console.log(url)
     return res.redirect(<string>url?.url);
 });
 
-type ReqQuery = { url ?: string, alias ?: string }
+type AddUrlReqQuery = { url ?: string, alias ?: string }
 
 
 router.post(p.add, async (req: Request, res: Response) => {
-    const params: ReqQuery = req.query;
+    const params: AddUrlReqQuery = req.query;
     const longUrl = params.url
     const alias = params.alias
     // Check param
-    console.log(req.params)
     if (!longUrl) {
         throw new ParamMissingError();
     }
@@ -44,10 +46,10 @@ router.post(p.add, async (req: Request, res: Response) => {
         throw new UrlNotValidError();
     }
     const id = getRandomInt();
-    const shortUrl = new URL(longUrl).hostname + "/" +  nanoid(6);
+    const shortUrl = new URL(longUrl).protocol + "//" + new URL(longUrl).host + "/" +  nanoid.nanoid(6);
     let urlAlias = '';
     if (alias !== undefined) {
-        urlAlias = alias;
+        urlAlias = new URL(longUrl).protocol + "//" + new URL(longUrl).host + "/" + alias;
     }
     const url = await urlService.addOne(id, longUrl, shortUrl, urlAlias, 0);
     return res.status(OK).json({url});

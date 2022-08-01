@@ -10,10 +10,10 @@ import { UrlNotFoundError } from '@shared/errors';
  * @returns
  */
 async function getOne(shortUrl: string): Promise<IUrl | null> {
-    const persists = await urlRepo.persists(shortUrl);
-    if (!persists) {
-        throw new UrlNotFoundError();
-    }
+    // const persists = await urlRepo.persists(shortUrl);
+    // if (!persists) {
+    //     throw new UrlNotFoundError();
+    // }
     return urlRepo.getOne(shortUrl);
 }
 
