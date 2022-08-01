@@ -14,7 +14,11 @@ import {isNumberObject} from "util/types";
 async function getOne(shortUrl: string): Promise<IUrl | null> {
     const db = await orm.openDb();
     for (let i = 0; i < db.urls.length; i++) {
-        if (db.urls[i].shortUrl === shortUrl || db.urls[i].alias === shortUrl) {
+        const dbEntry = db.urls[i];
+        if (dbEntry.shortUrl === shortUrl || dbEntry.alias === shortUrl) {
+            dbEntry.clicks += 1;
+            db.urls.push(dbEntry);
+            await orm.saveDb(db)
             return db.urls[i];
         }
     }
