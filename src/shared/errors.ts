@@ -23,6 +23,17 @@ export class ParamMissingError extends CustomError {
 }
 
 
+export class UrlNotValidError extends CustomError {
+
+    public static readonly Msg = 'The given url is not valid.';
+    public static readonly HttpStatus = HttpStatusCodes.BAD_REQUEST;
+
+    constructor() {
+        super(UrlNotValidError.Msg, UrlNotValidError.HttpStatus);
+    }
+}
+
+
 export class UserNotFoundError extends CustomError {
 
     public static readonly Msg = 'A user with the given id does not exists in the database.';
@@ -30,6 +41,17 @@ export class UserNotFoundError extends CustomError {
 
     constructor() {
         super(UserNotFoundError.Msg, UserNotFoundError.HttpStatus);
+    }
+}
+
+
+export class UrlNotFoundError extends CustomError {
+
+    public static readonly Msg = 'A url with the given short url does not exists in the database.';
+    public static readonly HttpStatus = HttpStatusCodes.NOT_FOUND;
+
+    constructor() {
+        super(UrlNotFoundError.Msg, UrlNotFoundError.HttpStatus);
     }
 }
 
